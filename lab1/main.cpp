@@ -3,21 +3,20 @@
 #include <map>
 #include <fstream>
 #include <list>
+#include <queue>
 using namespace std;
 
 class Graph {
-public:
+private:
     int numOfNodes;
-    //map<int, bool> visited;
     vector<vector<int>> adj;
-    vector <bool> visited;
 
+public:
     Graph(int n) { //mamy n+1 elementow, numerujemy wierzcholki 1...n
         numOfNodes = n;
         adj = *new vector<vector<int>>;
         for (int i = 0; i <= numOfNodes; i++) {
             adj.push_back(*new vector<int>);
-            visited.push_back(false);
         }
     }
 
@@ -30,23 +29,48 @@ public:
             cout << "outdegree: " << x.size() << '\n';
         }
     }
+
     void showvisits() {
         for (int i = 0; i < numOfNodes; i++) {
-            cout  << "visited: " << visited[i] << '\n';
+            //cout  << "visited: " << visited[i] << '\n';
         }
     }
 
     void DFS(int start) {
+        vector <bool> visited(numOfNodes + 1, false);
+        cout << "DFS: ";
+        dfsUtil(start, visited);
+        cout << '\n';
+    }
+
+    void dfsUtil(int start, vector<bool>& visited) {
         visited[start] = true; //uwazaj na to
         cout << start << ' ';
         for (int i = 0; i < adj[start].size(); i++) {
             if (!visited[adj[start][i]])
-                DFS(adj[start][i]);
+                dfsUtil(adj[start][i], visited);
         }
     }
 
     void BFS(int start) {
+        vector <bool> visited(numOfNodes + 1, false);
+        cout << "BFS: ";
+        queue<int> q;
+        visited[start] = true;
+        q.push(start);
 
+        while(!q.empty()) {
+            int current = q.front();
+            cout << current << ' ';
+            q.pop();
+
+            for (int i : adj[current]) {
+                if (!visited[i]) {
+                    visited[i] = true;
+                    q.push(i);
+                }
+            }
+        }
     }
 
     ~Graph() {
@@ -71,8 +95,7 @@ int main() {
         }
 
         ifs.close();
-        g.showDegrees();
-        g.DFS(1);
-        //g.showvisits();
+        g.DFS(2);
+        g.BFS(2);
     }
 }
