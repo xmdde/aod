@@ -63,16 +63,27 @@ void Graph::BFS(int start, bool print) {
     }
 }
 
-void Graph::topologicalSortUtil(int i, vector<bool>& visited, stack<int>& stack) {
-
+void Graph::topologicalSortUtil(int v, vector<bool>& visited, stack<int>& stack) {
+    visited[v] = true;
+    for (auto i : adj[v]) {
+        if (!visited[i]) {
+            topologicalSortUtil(i, visited, stack);
+        }
+    }
+    stack.push(v);
 }
 
 void Graph::topologicalSort() {
     vector<bool> visited(numOfNodes + 1, false);
     stack<int> stack;
     for (int i = 1; i <= numOfNodes; i++) {
-        if (visited[i] == false)
+        if (!visited[i])
             topologicalSortUtil(i, visited, stack);
+    }
+    cout << "Topological ordering: ";
+    while (!stack.empty()) {
+        cout << stack.top() << " ";
+        stack.pop();
     }
 }
 

@@ -12,24 +12,16 @@ class Graph {
 private:
     int numOfNodes;
     vector<vector<int>> adj;
+    void topologicalSortUtil(int i, vector<bool>& visited, stack<int>& stack);
+    void dfsUtil(int start, vector<bool>& visited);
 
 public:
     Graph(int n); //numerujemy wierzcholki 1...n
-
     void addEdge(int a, int b);
-
     void DFS(int start);
-
-    void dfsUtil(int start, vector<bool>& visited);
-
     void BFS(int start, bool print);
-
-    void topologicalSortUtil(int i, vector<bool>& visited, stack<int>& stack);
-
     void topologicalSort();
-
     void printGraph();
-
     ~Graph();
 };
 

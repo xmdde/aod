@@ -3,7 +3,7 @@
 #include "Graph.h"
 
 int main() {
-    ifstream ifs = ifstream("/Users/justynaziemichod/Documents/SEM4/aod/graphs/data/data.txt", ios_base::in);
+    ifstream ifs = ifstream("/Users/justynaziemichod/Documents/SEM4/aod/graphs/data2/1.txt", ios_base::in);
 
     if (ifs.is_open()) {
         char type;
@@ -25,5 +25,7 @@ int main() {
         
         ifs.close();
         g.BFS(1, true);
+        g.DFS(1);
+        g.topologicalSort();
     }
 }
