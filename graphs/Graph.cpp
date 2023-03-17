@@ -70,7 +70,7 @@ void Graph::topologicalSortUtil(int i, vector<bool>& visited, stack<int>& stack)
 void Graph::topologicalSort() {
     vector<bool> visited(numOfNodes + 1, false);
     stack<int> stack;
-    for (int i = 0; i < ; i++) {
+    for (int i = 1; i <= numOfNodes; i++) {
         if (visited[i] == false)
             topologicalSortUtil(i, visited, stack);
     }
