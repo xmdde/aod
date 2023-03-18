@@ -22,6 +22,7 @@ public:
     void BFS(int start, bool print);
     void topologicalSort();
     void printGraph();
+    bool isCyclic(stack<int> stack);
     ~Graph();
 };
 

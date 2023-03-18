@@ -4,6 +4,7 @@
 #include <fstream>
 #include <list>
 #include <queue>
+#include <unordered_map>
 using namespace std;
 
 Graph::Graph(int n) { //numerujemy wierzcholki 1...n
@@ -80,10 +81,14 @@ void Graph::topologicalSort() {
         if (!visited[i])
             topologicalSortUtil(i, visited, stack);
     }
-    cout << "Topological ordering: ";
-    while (!stack.empty()) {
-        cout << stack.top() << " ";
-        stack.pop();
+    if (!isCyclic(stack)) {
+        cout << "Topological ordering: ";
+        while (!stack.empty()) {
+            cout << stack.top() << " ";
+            stack.pop();
+        }
+    } else {
+        cout << "Graph has a cycle.\n"; //print sth
     }
 }
 
@@ -97,6 +102,23 @@ void Graph::printGraph() {
     }
 }
 
+bool Graph::isCyclic(stack<int> stack) {
+    unordered_map<int, int> topologicalPos; //element -> position in topological order
+    int i = 0;
+    while (!stack.empty()) {
+        topologicalPos[stack.top()] = i;
+        i++;
+        stack.pop();
+    }
+    for (i = 1; i <= numOfNodes; i++) {
+        for (int j : adj[i]) {
+            if (topologicalPos[i] > topologicalPos[j])
+                return true;
+        }
+    }
+    return false;
+}
+
 Graph::~Graph() {
-    //add proper destructor
+
 }
