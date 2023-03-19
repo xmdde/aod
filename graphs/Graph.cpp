@@ -82,10 +82,13 @@ void Graph::topologicalSort() {
             topologicalSortUtil(i, visited, stack);
     }
     if (!isCyclic(stack)) {
-        cout << "Topological ordering: ";
-        while (!stack.empty()) {
-            cout << stack.top() << " ";
-            stack.pop();
+        cout << "Graph doesn't have a cycle.\n"; //print sth
+        if (numOfNodes <= 200) {
+            cout << "Topological ordering:\n";
+            while (!stack.empty()) {
+                cout << stack.top() << " ";
+                stack.pop();
+            }
         }
     } else {
         cout << "Graph has a cycle.\n"; //print sth
@@ -120,5 +123,4 @@ bool Graph::isCyclic(stack<int> stack) {
 }
 
 Graph::~Graph() {
-
 }
