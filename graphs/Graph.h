@@ -16,6 +16,7 @@ private:
     void dfsUtil(int start, vector<bool>& visited);
     Graph transpose();
     void fillOrder(int start, vector<bool>& visited, stack<int>& stack);
+    void dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& SCCs, int index);
 
 public:
     Graph(int n); //numerujemy wierzcholki 1...n

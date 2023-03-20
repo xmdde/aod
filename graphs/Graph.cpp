@@ -143,6 +143,7 @@ void Graph::fillOrder(int start, vector<bool>& visited, stack<int>& stack) {
 }
 
 void Graph::SCCs() {
+    vector<vector<int>> SCCs;
     stack<int> stack;
     vector <bool> visited(numOfNodes + 1, false);
     for (int i = 1; i <= numOfNodes; i++) {
@@ -154,12 +155,37 @@ void Graph::SCCs() {
     for (auto i : visited) {
         i = false;
     }
+    int index = 0;
     while (!stack.empty()) {
         int start = stack.top();
         stack.pop();
         if (!visited[start]) {
-            transposed.dfsUtil(start, visited);
-            cout << '\n';
+            SCCs.push_back(*new vector<int>);
+            transposed.dfsUtilSCCs(start, visited, SCCs, index);
+            index++;
+        }
+    }
+    cout << "There are " << index << " SCCs in the graph.\n";
+    cout <<  "Number of nodes in each SCCs:\n";
+    for (auto i : SCCs) {
+        cout << i.size() << ' ';
+        if (numOfNodes <= 200) {
+            cout << '(';
+            for (int j : i) {
+                cout << j << ",";
+            }
+            cout << ")";
+        }
+        cout << '\n';
+    }
+}
+
+void Graph::dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& SCCs, int index) {
+    visited[start] = true;
+    SCCs[index].push_back(start);
+    for (auto i : adj[start]) {
+        if (!visited[i]) {
+            dfsUtilSCCs(i, visited, SCCs, index);
         }
     }
 }

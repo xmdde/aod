@@ -10,7 +10,9 @@ Graph generateGraph(const string& path);
 
 int main() {
     //ex2();
-    //ex3();
+    ex3();
+    //Graph g = generateGraph("/Users/justynaziemichod/Documents/SEM4/aod/graphs/1/data.txt");
+    //g.SCCs();
 }
 
 void ex1() {
@@ -44,8 +46,17 @@ void ex2() {
 }
 
 void ex3() {
-    Graph g = generateGraph("/Users/justynaziemichod/Documents/SEM4/aod/graphs/1/data.txt");
-    g.SCCs();
+    for (int i = 1; i <= 3; i++) {
+        string suffix = "g3-" + to_string(i) + ".txt";
+        cout << suffix << '\n';
+        auto begin = chrono::high_resolution_clock::now();
+        string path = "/Users/justynaziemichod/Documents/SEM4/aod/graphs/3/" + suffix;
+        Graph g = generateGraph(path);
+        g.SCCs();
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - begin);
+        cout << elapsed.count() << " ms \n\n";
+    }
 }
 
 Graph generateGraph(const string& path) {
