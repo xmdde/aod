@@ -122,5 +122,47 @@ bool Graph::isCyclic(stack<int> stack) {
     return false;
 }
 
+Graph Graph::transpose() {
+    Graph g = *new Graph(numOfNodes);
+    for (int i = 1; i <= numOfNodes; i++) {
+        for  (int j : adj[i]) {
+            g.addEdge(j, i);
+        }
+    }
+    return g;
+}
+
+void Graph::fillOrder(int start, vector<bool>& visited, stack<int>& stack) {
+    visited[start] = true;
+    for (int i : adj[start]) {
+        if (!visited[i]) {
+            fillOrder(i, visited, stack);
+        }
+    }
+    stack.push(start);
+}
+
+void Graph::SCCs() {
+    stack<int> stack;
+    vector <bool> visited(numOfNodes + 1, false);
+    for (int i = 1; i <= numOfNodes; i++) {
+        if (!visited[i]) {
+            fillOrder(i, visited, stack);
+        }
+    }
+    Graph transposed = this->transpose();
+    for (auto i : visited) {
+        i = false;
+    }
+    while (!stack.empty()) {
+        int start = stack.top();
+        stack.pop();
+        if (!visited[start]) {
+            transposed.dfsUtil(start, visited);
+            cout << '\n';
+        }
+    }
+}
+
 Graph::~Graph() {
 }

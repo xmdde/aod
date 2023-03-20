@@ -5,10 +5,12 @@
 #include "Graph.h"
 void ex1();
 void ex2();
-Graph generateGraph(string path);
+void ex3();
+Graph generateGraph(const string& path);
 
 int main() {
     //ex2();
+    //ex3();
 }
 
 void ex1() {
@@ -16,14 +18,12 @@ void ex1() {
 }
 
 void ex2() {
-    srand(time(nullptr));
-
     for (int i = 1; i <= 6; i++) {
         string suffix = "g2a-" + to_string(i) + ".txt";
         cout << suffix << '\n';
+        auto begin = chrono::high_resolution_clock::now();
         string path = "/Users/justynaziemichod/Documents/SEM4/aod/graphs/2/" + suffix;
         Graph g = generateGraph(path);
-        auto begin = chrono::high_resolution_clock::now();
         g.topologicalSort();
         auto end = chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - begin);
@@ -33,18 +33,22 @@ void ex2() {
     for (int i = 1; i <= 6; i++) {
         string suffix = "g2b-" + to_string(i) + ".txt";
         cout << suffix << '\n';
+        auto begin = chrono::high_resolution_clock::now();
         string path = "/Users/justynaziemichod/Documents/SEM4/aod/graphs/2/" + suffix;
         Graph g = generateGraph(path);
-        auto begin = chrono::high_resolution_clock::now();
         g.topologicalSort();
         auto end = chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - begin);
         cout << elapsed.count() << " ms \n\n";
     }
-
 }
 
-Graph generateGraph(string path) {
+void ex3() {
+    Graph g = generateGraph("/Users/justynaziemichod/Documents/SEM4/aod/graphs/1/data.txt");
+    g.SCCs();
+}
+
+Graph generateGraph(const string& path) {
     ifstream ifs = ifstream(path, ios_base::in);
     if (ifs.is_open()) {
         char type;

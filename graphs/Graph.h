@@ -14,6 +14,8 @@ private:
     vector<vector<int>> adj;
     void topologicalSortUtil(int i, vector<bool>& visited, stack<int>& stack);
     void dfsUtil(int start, vector<bool>& visited);
+    Graph transpose();
+    void fillOrder(int start, vector<bool>& visited, stack<int>& stack);
 
 public:
     Graph(int n); //numerujemy wierzcholki 1...n
@@ -24,6 +26,8 @@ public:
     void printGraph();
     bool isCyclic(stack<int> stack);
     ~Graph();
+
+    void SCCs();
 };
 
 #endif //LAB1_GRAPH_H
