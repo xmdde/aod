@@ -10,12 +10,25 @@ void ex4();
 Graph generateGraph(const string& path);
 
 int main() {
+    ex1();
     //ex2();
     //ex3();
     //ex4();
 }
 
 void ex1() {
+    for (int i = 1; i <= 4; i++) {
+        string suffix = "1-" + to_string(i) + ".txt";
+        cout << suffix << '\n';
+        auto begin = chrono::high_resolution_clock::now();
+        string path = "/Users/justynaziemichod/Documents/SEM4/aod/graphs/1/" + suffix;
+        Graph g = generateGraph(path);
+        g.DFS(true);
+        g.BFS(true);
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::microseconds>(end - begin);
+        cout << elapsed.count() << " µs \n\n";
+    }
 }
 
 void ex2() {

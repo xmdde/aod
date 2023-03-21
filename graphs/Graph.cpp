@@ -19,29 +19,38 @@ void Graph::addEdge(int a, int b) {
     adj[a].push_back(b);
 }
 
-void Graph::DFS(int start) {
+void Graph::DFS(bool print) {
     vector <bool> visited(numOfNodes + 1, false);
+    Graph* dfsTree = new Graph(numOfNodes);
     cout << "DFS: ";
-    dfsUtil(start, visited);
+    dfsUtil(1, visited, dfsTree, 0);
+    if (print) {
+        cout << '\n';
+        dfsTree->printGraph();
+    }
     cout << '\n';
 }
 
-void Graph::dfsUtil(int start, vector<bool>& visited) {
+void Graph::dfsUtil(int start, vector<bool>& visited, Graph* dfsTree, int prev) {
     visited[start] = true;
     cout << start << ' ';
+    if (prev != 0) {
+        dfsTree->addEdge(prev, start);
+        dfsTree->addEdge(start, prev);
+    }
     for (int i : adj[start]) {
         if (!visited[i])
-            dfsUtil(i, visited);
+            dfsUtil(i, visited, dfsTree, start);
     }
 }
 
-void Graph::BFS(int start, bool print) {
+void Graph::BFS(bool print) {
     vector <bool> visited(numOfNodes + 1, false);
     Graph bfsTree = *new Graph(numOfNodes);
     cout << "BFS: ";
     queue<int> q;
-    visited[start] = true;
-    q.push(start);
+    visited[1] = true;
+    q.push(1);
 
     while(!q.empty()) {
         int current = q.front();
@@ -179,7 +188,6 @@ void Graph::dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& S
 
 void Graph::dfsTraversalUtil(int start, vector<bool>& visited, queue<int>& q) {
     stack<int> test;
-    //visited[start] = true;
     test.push(start);
 
     while (!test.empty()) {

@@ -13,7 +13,7 @@ private:
     int numOfNodes;
     vector<vector<int>> adj;
     void topologicalSortUtil(int v, vector<bool>& visited, stack<int>& stack);
-    void dfsUtil(int start, vector<bool>& visited);
+    void dfsUtil(int start, vector<bool>& visited, Graph* dfsTree, int prev);
     Graph transpose();
     void dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& SCCs, int index);
 
@@ -21,8 +21,8 @@ public:
     Graph(int n); //numerujemy wierzcholki 1...n
     ~Graph();
     void addEdge(int a, int b);
-    void DFS(int start);
-    void BFS(int start, bool print);
+    void DFS(bool print);
+    void BFS(bool print);
     void topologicalSort();
     void printGraph();
     bool isCyclic(stack<int> stack);
