@@ -12,23 +12,27 @@ class Graph {
 private:
     int numOfNodes;
     vector<vector<int>> adj;
-    void topologicalSortUtil(int i, vector<bool>& visited, stack<int>& stack);
+    void topologicalSortUtil(int v, vector<bool>& visited, stack<int>& stack);
     void dfsUtil(int start, vector<bool>& visited);
     Graph transpose();
-    void fillOrder(int start, vector<bool>& visited, stack<int>& stack);
     void dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& SCCs, int index);
 
 public:
     Graph(int n); //numerujemy wierzcholki 1...n
+    ~Graph();
     void addEdge(int a, int b);
     void DFS(int start);
     void BFS(int start, bool print);
     void topologicalSort();
     void printGraph();
     bool isCyclic(stack<int> stack);
-    ~Graph();
-
     void SCCs();
+    void dfsTraversal(queue<int>& queue);
+    void dfsTraversalUtil(int start, vector<bool>& visited, queue<int>& q);
+    void kahnAlgorithm();
+    void iterativeTopologicalSort(stack<int>& topOrder);
+    bool isBipartite(vector<int>& colors);
+    void bipartiteAns();
 };
 
 #endif //LAB1_GRAPH_H

@@ -6,17 +6,16 @@
 void ex1();
 void ex2();
 void ex3();
+void ex4();
 Graph generateGraph(const string& path);
 
 int main() {
     //ex2();
-    ex3();
-    //Graph g = generateGraph("/Users/justynaziemichod/Documents/SEM4/aod/graphs/1/data.txt");
-    //g.SCCs();
+    //ex3();
+    //ex4();
 }
 
 void ex1() {
-
 }
 
 void ex2() {
@@ -46,7 +45,7 @@ void ex2() {
 }
 
 void ex3() {
-    for (int i = 1; i <= 3; i++) {
+    for (int i = 1; i <= 5; i++) {
         string suffix = "g3-" + to_string(i) + ".txt";
         cout << suffix << '\n';
         auto begin = chrono::high_resolution_clock::now();
@@ -56,7 +55,21 @@ void ex3() {
         auto end = chrono::high_resolution_clock::now();
         auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - begin);
         cout << elapsed.count() << " ms \n\n";
-    }
+    } //dla 6 nie dziala (overflow stosu rekursji)
+}
+
+void ex4() {
+    for (int i = 1; i <= 6; i++) {
+        string suffix = "d4a-" + to_string(i) + ".txt";
+        cout << suffix << '\n';
+        auto begin = chrono::high_resolution_clock::now();
+        string path = "/Users/justynaziemichod/Documents/SEM4/aod/graphs/4/" + suffix;
+        Graph g = generateGraph(path);
+        g.bipartiteAns();
+        auto end = chrono::high_resolution_clock::now();
+        auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - begin);
+        cout << elapsed.count() << " ms \n\n";
+    } //uzup d4a, d4b, u4a, u4b
 }
 
 Graph generateGraph(const string& path) {
@@ -69,7 +82,6 @@ Graph generateGraph(const string& path) {
         ifs >> type;
         ifs >> a >> m;
         Graph g = *new Graph(a);
-
         while (m > 0) {
             ifs >> a >> b;
             g.addEdge(a, b);

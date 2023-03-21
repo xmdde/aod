@@ -29,9 +29,9 @@ void Graph::DFS(int start) {
 void Graph::dfsUtil(int start, vector<bool>& visited) {
     visited[start] = true;
     cout << start << ' ';
-    for (int i = 0; i < adj[start].size(); i++) {
-        if (!visited[adj[start][i]])
-            dfsUtil(adj[start][i], visited);
+    for (int i : adj[start]) {
+        if (!visited[i])
+            dfsUtil(i, visited);
     }
 }
 
@@ -82,7 +82,7 @@ void Graph::topologicalSort() {
             topologicalSortUtil(i, visited, stack);
     }
     if (!isCyclic(stack)) {
-        cout << "Graph doesn't have a cycle.\n"; //print sth
+        cout << "Graph doesn't have a cycle.\n";
         if (numOfNodes <= 200) {
             cout << "Topological ordering:\n";
             while (!stack.empty()) {
@@ -91,7 +91,7 @@ void Graph::topologicalSort() {
             }
         }
     } else {
-        cout << "Graph has a cycle.\n"; //print sth
+        cout << "Graph has a cycle.\n";
     }
 }
 
@@ -132,41 +132,28 @@ Graph Graph::transpose() {
     return g;
 }
 
-void Graph::fillOrder(int start, vector<bool>& visited, stack<int>& stack) {
-    visited[start] = true;
-    for (int i : adj[start]) {
-        if (!visited[i]) {
-            fillOrder(i, visited, stack);
-        }
-    }
-    stack.push(start);
-}
-
 void Graph::SCCs() {
     vector<vector<int>> SCCs;
     stack<int> stack;
+    ::stack<int> topOrder;
     vector <bool> visited(numOfNodes + 1, false);
-    for (int i = 1; i <= numOfNodes; i++) {
-        if (!visited[i]) {
-            fillOrder(i, visited, stack);
-        }
-    }
-    Graph transposed = this->transpose();
-    for (auto i : visited) {
-        i = false;
-    }
+    iterativeTopologicalSort(topOrder);
+
+    Graph transposed = transpose();
     int index = 0;
-    while (!stack.empty()) {
-        int start = stack.top();
-        stack.pop();
+    while (!topOrder.empty()) {
+        int start = topOrder.top();
+        topOrder.pop();
         if (!visited[start]) {
             SCCs.push_back(*new vector<int>);
             transposed.dfsUtilSCCs(start, visited, SCCs, index);
             index++;
         }
     }
+
     cout << "There are " << index << " SCCs in the graph.\n";
-    cout <<  "Number of nodes in each SCCs:\n";
+    cout << "Number of nodes in each SCCs:\n";
+
     for (auto i : SCCs) {
         cout << i.size() << ' ';
         if (numOfNodes <= 200) {
@@ -183,12 +170,162 @@ void Graph::SCCs() {
 void Graph::dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& SCCs, int index) {
     visited[start] = true;
     SCCs[index].push_back(start);
-    for (auto i : adj[start]) {
-        if (!visited[i]) {
-            dfsUtilSCCs(i, visited, SCCs, index);
+    for (auto it = adj[start].rbegin(); it != adj[start].rend(); it++) {
+        if (!visited[*it]) {
+            dfsUtilSCCs(*it, visited, SCCs, index);
         }
     }
 }
 
-Graph::~Graph() {
+void Graph::dfsTraversalUtil(int start, vector<bool>& visited, queue<int>& q) {
+    stack<int> test;
+    //visited[start] = true;
+    test.push(start);
+
+    while (!test.empty()) {
+        start = test.top();
+        test.pop();
+        if (visited[start]) {
+            continue;
+        }
+        visited[start] = true;
+        q.push(start);
+        for (auto i : adj[start]) {
+            if (!visited[i])
+                test.push(i);
+        }
+        //q.push(start);
+        /*
+        for (auto it = adj[start].rbegin(); it != adj[start].rend(); it++) {
+            if (!visited[*it])
+                test.push(*it);
+        } */
+    }
 }
+
+void Graph::dfsTraversal(queue<int>& queue) {
+    vector<bool> visited(numOfNodes + 1, false);
+    for (int i = 1; i <= numOfNodes; i++) {
+        if (!visited[i])
+            dfsTraversalUtil(i, visited, queue);
+    }
+}
+
+void Graph::kahnAlgorithm() {
+    vector<int> topOrder;
+    vector<int> inDegree(numOfNodes + 1, 0);
+    for (int u = 0; u <= numOfNodes; u++) {
+        for (auto i : adj[u]) {
+            inDegree[i]++;
+        }
+    }
+    queue<int> q;
+    for (int i = 1; i <= numOfNodes; i++) {
+        if (inDegree[i] == 0)
+            q.push(i);
+    }
+    int count = 0;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        topOrder.push_back(u);
+        for (auto i : adj[u]) {
+            inDegree[i]--;
+            if (inDegree[i] == 0)
+                q.push(i);
+        }
+        count++;
+    }
+    if (count != numOfNodes) {
+        cout << "There is a cycle in the graph.\n";
+    } else {
+        cout << "Topological ordering: ";
+        for (auto i: topOrder)
+            cout << i << ' ';
+    }
+}
+
+void Graph::iterativeTopologicalSort(stack<int>& topOrder) {
+    vector<bool> visited(numOfNodes + 1, false);
+    stack<pair<bool,int>> dfs;
+    for(int i = 1; i <= numOfNodes; i++){
+        if(!visited[i]){
+            dfs.push(make_pair(false,i));
+        }
+        while(!dfs.empty()){
+            pair<bool,int> node=dfs.top();
+            dfs.pop();
+            if (node.first) {
+                topOrder.push(node.second);
+                continue;
+            }
+            if (visited[node.second]) {
+                continue;
+            }
+            visited[node.second]=true;
+            dfs.push(make_pair(true, node.second));
+            const auto& newVec=adj[node.second]; //vector of neighbours
+            for(const auto son: newVec){
+                if(!visited[son]){
+                    dfs.push(make_pair(false, son));
+                }
+            }
+        }
+    }
+}
+
+bool Graph::isBipartite(vector<int>& colors) {
+    queue<pair<int, int>> q; //{v , color}
+
+    for (int i = 1; i <= numOfNodes; i++) {
+        if (colors[i] == 0) {
+            q.push({ i, 1 });
+            colors[i] = 1;
+
+            while (!q.empty()) {
+                pair<int, int> p = q.front();
+                q.pop();
+                int v = p.first;
+                int c = p.second;
+
+                for (int j : adj[v]) {
+                    if (colors[j] == c)
+                        return false;
+
+                    if (colors[j] == 0) {
+                        colors[j] = c * (-1);
+                        q.push({ j, colors[j] });
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void Graph::bipartiteAns() {
+    vector<int> colors(numOfNodes + 1, 0); //colors - -1, 1
+    if (!isBipartite(colors)) {
+        cout << "Graph is not bipartite.\n";
+    }
+    else {
+        cout << "Graph is bipartite.\n";
+        if (numOfNodes <= 200) {
+            cout << "Set 1: ";
+            for (int i = 1; i <= numOfNodes; i++) {
+                if (colors[i] == -1) {
+                    cout << i << ' ';
+                }
+            }
+            cout << "\nSet 2: ";
+            for (int i = 1; i <= numOfNodes; i++) {
+                if (colors[i] == 1) {
+                    cout << i << ' ';
+                }
+            }
+            cout << '\n';
+        }
+    }
+}
+
+Graph::~Graph() = default;
