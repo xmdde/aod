@@ -10,14 +10,14 @@ void ex4();
 Graph generateGraph(const string& path);
 
 int main() {
-    ex1();
+    //ex1();
     //ex2();
     //ex3();
     //ex4();
 }
 
 void ex1() {
-    for (int i = 1; i <= 4; i++) {
+    for (int i = 1; i <= 5; i++) {
         string suffix = "1-" + to_string(i) + ".txt";
         cout << suffix << '\n';
         auto begin = chrono::high_resolution_clock::now();

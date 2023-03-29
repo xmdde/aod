@@ -28,7 +28,6 @@ public:
     bool isCyclic(stack<int> stack);
     void SCCs();
     void dfsTraversal(queue<int>& queue);
-    void dfsTraversalUtil(int start, vector<bool>& visited, queue<int>& q);
     void kahnAlgorithm();
     void iterativeTopologicalSort(stack<int>& topOrder);
     bool isBipartite(vector<int>& colors);

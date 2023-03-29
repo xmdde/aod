@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.23)
-project(lab1)
-
+cmake_minimum_required(VERSION 3.10)
+project(graphs)
 set(CMAKE_CXX_STANDARD 14)
-
-add_executable(lab1 main.cpp Graph.cpp Graph.h)
+include_directories(src)
+add_subdirectory(src)
+add_subdirectory(tst)
+add_subdirectory(googletest)

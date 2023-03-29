@@ -56,7 +56,6 @@ void Graph::BFS(bool print) {
         int current = q.front();
         cout << current << ' ';
         q.pop();
-
         for (int i : adj[current]) {
             if (!visited[i]) {
                 visited[i] = true;
@@ -185,39 +184,14 @@ void Graph::dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& S
         }
     }
 }
-
-void Graph::dfsTraversalUtil(int start, vector<bool>& visited, queue<int>& q) {
-    stack<int> test;
-    test.push(start);
-
-    while (!test.empty()) {
-        start = test.top();
-        test.pop();
-        if (visited[start]) {
-            continue;
-        }
-        visited[start] = true;
-        q.push(start);
-        for (auto i : adj[start]) {
-            if (!visited[i])
-                test.push(i);
-        }
-        //q.push(start);
-        /*
-        for (auto it = adj[start].rbegin(); it != adj[start].rend(); it++) {
-            if (!visited[*it])
-                test.push(*it);
-        } */
-    }
-}
-
+/*
 void Graph::dfsTraversal(queue<int>& queue) {
     vector<bool> visited(numOfNodes + 1, false);
     for (int i = 1; i <= numOfNodes; i++) {
         if (!visited[i])
             dfsTraversalUtil(i, visited, queue);
     }
-}
+}*/
 
 void Graph::kahnAlgorithm() {
     vector<int> topOrder;
@@ -256,12 +230,13 @@ void Graph::kahnAlgorithm() {
 void Graph::iterativeTopologicalSort(stack<int>& topOrder) {
     vector<bool> visited(numOfNodes + 1, false);
     stack<pair<bool,int>> dfs;
-    for(int i = 1; i <= numOfNodes; i++){
-        if(!visited[i]){
+
+    for (int i = 1; i <= numOfNodes; i++) {
+        if (!visited[i]) {
             dfs.push(make_pair(false,i));
         }
-        while(!dfs.empty()){
-            pair<bool,int> node=dfs.top();
+        while (!dfs.empty()) {
+            pair<bool,int> node = dfs.top();
             dfs.pop();
             if (node.first) {
                 topOrder.push(node.second);
@@ -270,11 +245,11 @@ void Graph::iterativeTopologicalSort(stack<int>& topOrder) {
             if (visited[node.second]) {
                 continue;
             }
-            visited[node.second]=true;
+            visited[node.second] = true;
             dfs.push(make_pair(true, node.second));
-            const auto& newVec=adj[node.second]; //vector of neighbours
-            for(const auto son: newVec){
-                if(!visited[son]){
+            const auto& newVec= adj[node.second]; //neighbours
+            for (int son : newVec) {
+                if (!visited[son]) {
                     dfs.push(make_pair(false, son));
                 }
             }
