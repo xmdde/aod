@@ -14,7 +14,6 @@ private:
     vector<vector<int>> adj;
     void topologicalSortUtil(int v, vector<bool>& visited, stack<int>& stack);
     void dfsUtil(int start, vector<bool>& visited, Graph* dfsTree, int prev);
-    Graph transpose();
     void dfsUtilSCCs(int start, vector<bool>& visited, vector<vector<int>>& SCCs, int index);
 
 public:
@@ -25,6 +24,7 @@ public:
     void BFS(bool print);
     void topologicalSort();
     void printGraph();
+    Graph transpose();
     bool isCyclic(stack<int> stack);
     void SCCs();
     void dfsTraversal(queue<int>& queue);
