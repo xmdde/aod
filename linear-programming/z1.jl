@@ -14,6 +14,7 @@ A = [110000, 220000, 330000, 440000]
 
 model = Model(HiGHS.Optimizer)
 
+# plan[i,j] - amount of fuel bought from company j to airport i
 @variable(model, plan[1:airports, 1:companies] >= 0)
 
 for i in 1:airports
@@ -23,7 +24,7 @@ end
 for i in 1:companies
     @constraint(model, sum(plan[j, i] for j in 1:airports) <= C[i])
 end
-eltype(plan)
+
 @objective(model, Min, sum(prices[i, j] * plan[i, j] for i in 1:airports, j in 1:companies))
 optimize!(model)
 solution_summary(model)
