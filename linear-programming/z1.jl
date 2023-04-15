@@ -27,7 +27,6 @@ end
 
 @objective(model, Min, sum(prices[i, j] * plan[i, j] for i in 1:airports, j in 1:companies))
 optimize!(model)
-solution_summary(model)
 
 for a in 1:airports, c in 1:companies
     if (value(plan[a,c]) != 0)
