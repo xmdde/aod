@@ -8,7 +8,7 @@ function parsedata()
         time = zeros(Int64, n, n)
         #cost and time
     for it in 1:a
-        i, j, c, t = [parse(Int, x) for x in split(readline(f), " ")] #remember to change data in the file
+        i, j, c, t = [parse(Int, x) for x in split(readline(f), " ")]
         graph[i, j] = true
         cost[i, j] = c
         time[i, j] = t
@@ -23,7 +23,7 @@ end
 f = parsedata()
 n = f[1]
 a = f[2]
-graph = f[3]
+graph = f[3] # graph[i,j] == true if there is an edge from i to j
 cost = f[4]
 time = f[5]
 start = f[6]
@@ -45,7 +45,7 @@ model = Model(GLPK.Optimizer)
 # for every other node sum of incoming edges should be equal to outcoming
 @constraint(model, [i = 1:n; i != start && i != finish], sum(path[i, :]) == sum(path[:, i]))
 
-@constraint(model, sum(path[i,j] for i in 1:n, j in 1:n) <= T)
+@constraint(model, sum(path[i,j]*time[i,j] for i in 1:n, j in 1:n) <= T)
 
 @objective(model, Min, sum(path[i,j]*cost[i,j] for i in 1:n, j in 1:n))
 
