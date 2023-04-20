@@ -1,0 +1,333 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Algorytmy Optymalizacji Dyskretnej - Lista 2}
+\author{Justyna Ziemichód}
+
+\begin{document}
+\maketitle
+
+\section{Zadanie 1}
+\subsection{Opis modelu}
+\subsubsection{Zmienne decyzyjne}
+Dla problemu rozważanego dla \(n\) lotnisk i \(m\) firm zmienną decyzyjną jest \(A\in\mathbb{R}^{n \times m}\),
+gdzie \(a_{ij}\) - liczba galonów paliwa kupiona od firmy \(j\) dla lotniska \(i\).
+
+\subsubsection{Ograniczenia}
+\begin{itemize}
+    \item \((\forall i\in[n],j\in[m])(x_{ij} \geq 0\))
+    \item Lotnisko \(i\) potrzebuje \(c_i\) paliwa, więc \[(\forall i \in [n])(\sum_{j=1}^m a_{ij} = c_i)\]
+    \item Firma \(j\) nie może dostarczyć więcej niż \(C_j\) paliwa, zatem \[(\forall j \in [m])(\sum_{i=1}^n a_{ij} \leq C_j)\]
+\end{itemize}
+
+\subsubsection{Funkcja celu}
+Niech \(P\in\mathbb{R}_+^{n \times m}\) to macierz kosztu, gdzie \(p_{ij}\) - koszt paliwa kupionego od firmy \(j\) dla lotniska \(i\). Wtedy funkcją celu jest \[\sum_{i\in[n],j\in[m]} a_{ij} \cdot p_{ij}\]
+W tym problemie funkcja będzie minimalizowana.
+
+\subsection{Wyniki i interpretacja}
+Dla $m=3$ firm i $n=4$ lotnisk z następującymi kosztami dostawy paliwa przez poszczególnych dostawców
+\begin{center}
+\begin{tabular}{| c | c c c |}
+\hline
+ & Firma 1 & Firma 2 & Firma 3\\
+ \hline
+Lotnisko 1 & 10 & 7 & 8\\
+Lotnisko 2 & 10 & 11 & 14\\
+Lotnisko 3 & 9 & 12 & 4\\
+Lotnisko 4 & 11 & 13 & 9\\
+\hline
+\end{tabular}
+\end{center}
+i ograniczeniami na paliwo od firm i lotnisk:
+\[C_1=275000, C_2=550000, C_3=660000\] \[c_1=110000, c_2=220000, c_3=330000, c_4=440000\]
+wartość minimalna funkcji celu wynosi \(UZUP\) i ilość paliwa kupiona od poszczególnych firm wygląda następująco
+\begin{center}
+\begin{tabular}{| c | c c c |}
+\hline
+ & Firma 1 & Firma 2 & Firma 3\\
+\hline
+Lotnisko 1 & 0 & 110000 & 0\\
+Lotnisko 2 & 165000 & 55000 & 0 \\
+Lotnisko 3 & 0 & 0 & 330000 \\
+Lotnisko 4 & 110000 &  0 & 330000 \\
+\hline
+\end{tabular}
+\end{center}
+Wszystkie firmy dostarczają paliwo.
+
+\section{Zadanie 2}
+\subsection{Opis modelu}
+\subsubsection{Zmienne decyzyjne}
+Dla problemu z \(n\) miastami i \(a\) połączeniami między miastami zmienną decyzyjną jest macierz połączeń między miastami \(x\in \mathbb{R}^{n\times n}\), gdzie \(x_{ij}=1\), jeśli połączenie z miasta \(i\) do \(j\) jest zawarte w ścieżce optymalnej, a \(x_{ij} = 0\) w przeciwnym wypadku.
+
+\subsubsection{Dane}
+Niech \(C\in\mathbb{R}^{n\times n}\) oznacza macierz kosztów dojazdu, gdzie \(c_{ij}\) - koszt dojazdu z miasta $i$ do $j$. \\
+Niech \(T\in\mathbb{R}^{n\times n}\) oznacza macierz czasów dojazdu, gdzie \(t_{ij}\) - czas dojazdu z miasta $i$ do $j$. \\ $T$ - ograniczenie górne na czas przejazdu. 
+
+\subsubsection{Ograniczenia}
+\begin{itemize}
+    \item \((\forall i,j\in [n])(x_{ij} \in \{0,1\})\)
+    \item W ścieżce optymalnej możemy korzystać tylko z istniejących połączeń między miastami, stąd
+    \[(\forall i,j\in[n])(c_{ij} = 0 \Rightarrow x_{ij} = 0)\]
+    \item Dla każdego miasta oprócz pierwszego \(i_{start}\) i końcowego \(i_{finish}\), suma dróg wchodzących jest równa sumie dróg wychodzących
+    \[(\forall i\in [n]\setminus\{i_{start},i_{finish}\})\left(\sum_{j\in[n]}x_{ij} = \sum_{j\in[n]} x_{ji}\right)\]
+    \item Dla miasta startowego $i_{start}$ suma dróg wychodzących jest większa o 1 od sumy dróg wchodzących
+    \[\sum_{j\in[n]}x_{i_{start}j} - \sum_{j\in[n]} x_{ji_{start}} = 1\]
+    \item Dla miasta końcowego $i_{finish}$ suma dróg wychodzących jest mniejsza o 1 od sumy dróg wchodzących
+    \[\sum_{i\in[n]}x_{i_{finish} i} - \sum_{i\in[n]} x_{ii_{finish}} = -1\]
+    \item Nie możemy przekroczyć ograniczenia górnego na czas przejazdu
+    \[\sum_{i\in[n],j\in[n]} t_{ij} \cdot x_{ij} \leq T\]
+\end{itemize}
+
+\subsubsection{Funkcja celu}
+Funkcją celu jest koszt całej trasy
+\[\sum_{i\in[n],j\in[n]} c_{ij} \cdot x_{ij}\]
+Będzie ona minimalizowana.
+
+\subsection{Wyniki i interpretacja}
+Rozważamy egzemplarz, gdzie $i_{start}=1, i_{finish}=3, T=15$, a połączenia między miastami, koszta i czasy przejazdu wyglądają następująco:
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,node distance=3.1cm,on grid,auto] 
+    \node[state] (1) {$1$};
+    \node[state] (4) [right of = 1] {$4$}; 
+    \node[state] (2) [below of = 4] {$2$}; 
+    \node[state] (3) [right of = 4] {$3$}; 
+    \node[state] (5) [right of = 2] {$5$};
+   \path[->] 
+    (1) edge node {} (2)
+        edge node {} (4)
+    (2) edge node {} (3)
+        edge node {} (5)
+    (4) edge node {} (3)
+    (4) edge node {} (5)
+    (5) edge node {} (3);
+\end{tikzpicture}
+\end{center}
+\[c_{12}=2, c_{14}=2, c_{23}=2, c_{25}=4, c_{43}=3, c_{45}=1, c_{53}=1\]
+\[t_{12}=6, t_{14}=8, t_{23}=7, t_{25} =6, t_{43}=7, t_{45}=10, t_{53}=5\]
+
+Model znalazł następującą trasę o koszcie \(c=5\) i czasie \(t=15\).
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,node distance=3.1cm,on grid,auto] 
+    \node[state] (1) {$1$};
+    \node[state] (4) [right of = 1] {$4$}; 
+    \node[state] (2) [below of = 4] {$2$}; 
+    \node[state] (3) [right of = 4] {$3$}; 
+    \node[state] (5) [right of = 2] {$5$};
+   \path[->] 
+    (1) edge node {} (4)
+    (4) edge node {} (3);
+\end{tikzpicture}
+\end{center}
+
+\section{Zadanie 3}
+\subsection{Opis modelu}
+\subsubsection{Zmienne decyzyjne}
+Dla problemu rozważanego dla \(n\) dzielnic i \(m\) zmian zmienną decyzyjną jest \(X\in\mathbb{R}^{n \times m}\),
+gdzie \(x_{ij}\) - liczba radiowozów przypisana do dzielnicy \(i\) na zmianę \(j\).
+
+\subsubsection{Dane}
+Przez \(G\in\mathbb{R}^{n\times m}\) oznaczamy macierz ograniczeń górnych, gdzie \(g_{ij}\) - maksymalna dopuszczalna ilość radiowozów przypisana dzielnicy i na zmianę j. \\
+Analogicznie \(D\in\mathbb{R}^{n\times m}\) będzie macierzą ograniczeń dolnych. \\
+Ponadto \(s_i\) - minimalna liczba radiowozów przypisana na zmianę \(i\), \(a_i\) - minimalna liczba radiowozów przypisana dzielnicy \(i\).
+\subsubsection{Ograniczenia}
+\begin{itemize}
+    \item \((\forall i\in [n], j\in[m])(x_{ij} \geq 0)\)
+    \item Dla każdej zmiany powinna być przypisana wystarczająca liczba radiowozów
+    \[(\forall j\in [m])(\sum_{i\in[n]}x_{ij} \geq s_{ij})\]
+    \item W każdej dzielnicy powinna być wystarczająca liczba radiowozów
+    \[(\forall i\in [n])(\sum_{j\in[m]}x_{ij} \geq a_{ij})\]
+    \item Nie możemy przekroczyć ograniczeń górnych i dolnych na ilość pojazdów
+    \[(\forall i\in[n], j\in[m])(d_{ij} \leq x_{ij} \leq g_{ij})\]
+\end{itemize}
+
+\subsubsection{Funkcja celu}
+Funkcją celu jest liczba wszystkich radiowozów
+\[\sum_{i\in[n]} \sum_{j\in[m]} x_{ij}\]
+Będziemy ją minimalizować.
+
+\subsection{Wyniki i interpretacja}
+Rozważmy egzemplarz z \(n = 3\) dzielnicami, \(m = 3\) zmianami o następujących ograniczeniach:
+\begin{center}
+Ograniczenia dolne
+\end{center}
+\begin{center}
+\begin{tabular}{c c c c}
+ & zmiana 1 & zmiana 2 & zmiana 3\\
+ \hline
+$p_1$ & 2 & 4 & 3\\
+\hline
+$p_2$ & 3 & 6 & 5 \\
+\hline
+$p_3$ & 5 & 7 & 6 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+Ograniczenia górne
+\end{center}
+\begin{center}
+\begin{tabular}{c c c c}
+ & zmiana 1 & zmiana 2 & zmiana 3\\
+ \hline
+$p_1$ & 3 & 7 & 5\\
+\hline
+$p_2$ & 5 & 7 & 10 \\
+\hline
+$p_3$ & 8 & 12 & 10 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[s_1 = 10, s_2 = 20, s_3 = 18, a_1=10, a_2=14, a_3=13\]
+
+Model zwraca następujące przypisanie radiowozów do poszczególnych dzielnic i zmian.
+\begin{center}
+\begin{tabular}{| c | c c c |}
+\hline
+ & zmiana 1 & zmiana 2 & zmiana 3\\
+\hline
+p1 & 2 & 7 & 5\\
+p2 & 3 & 6 & 7 \\
+p3 & 5 & 7 & 6 \\
+\hline
+\end{tabular}
+\end{center}
+Całkowita liczba wykorzystanych radiowozów to 48.
+
+\section{Zadanie 4}
+\subsection{Opis modelu}
+\subsubsection{Zmienne decyzyjne}
+Dla magazynu o wymiarach \(n\times m\) zmienną decyzyjną jest macierz \(X\in \mathbb{N}^{n\times m}\), gdzie \(x_{ij}\) oznacza liczbę kamer w polu \(ij\).
+
+\subsubsection{Dane}
+Przez $b\in \{0,1\}^{n\times m}$ oznaczmy macierz obecności kontenerów, gdzie $b_{ij} = 1$ oznacza, że na kwadracie $ij$ stoi kontener.
+
+\subsubsection{Ograniczenia}
+\begin{itemize}
+\item Nie możemy stawiać kamer na pola z kontenerami.
+\[(\forall i\in [n], j\in[m])(b_{ij} = 1 \Rightarrow x_{ij} = 0)\]
+\item Każdy kontener powinien znajdować się w zasięgu \(k\) co najmniej jednej kamery
+\[(\forall i\in [n], j\in[m])\left(\sum_{l=\max(1, j-k)}^{ \min(m, j+k)}x_{il} + 
+\sum_{l=\max(1, i-k)}^{ \min(n, i+k) }x_{lj}\geq 1 \right)\]
+\end{itemize}
+
+\subsubsection{Funkcja celu}
+Funkcją celu jest liczba kamer
+$$\sum_{i\in[n],j\in[m]} c_{ij}$$
+Funkcję tę będziemy minimalizować.
+
+\subsection{Wyniki i interpretacja}
+Dla egzemplarzu problemu z $k=2$ zasięgiem kamery, i magazynem o wymiarach $5\times5$ z następującym rozkładem kontenerów:
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,gray,very thin] (1,1) grid (6,6);
+\filldraw[fill=blue, draw=black] (4,5) rectangle (5,6);
+\filldraw[fill=blue, draw=black] (2,4) rectangle (3,5);
+\filldraw[fill=blue, draw=black] (3,2) rectangle (4,3);
+\end{tikzpicture}
+\end{center}
+
+Model znalazł następujący rozkład kamer:
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,gray,very thin] (1,1) grid (6,6);
+\filldraw[fill=blue, draw=black] (4,5) rectangle (5,6);
+\filldraw[fill=blue, draw=black] (2,4) rectangle (3,5);
+\filldraw[fill=blue, draw=black] (3,2) rectangle (4,3);
+\filldraw[fill=red, draw=black] (1,2) rectangle (2,3);
+\filldraw[fill=red, draw=black] (2,5) rectangle (3,6);
+\end{tikzpicture}
+\end{center}
+
+Dla tego samego egzemplarza z \(k=1\) znaleziony rozkład kamer wygląda następująco:
+\begin{center}
+\begin{tikzpicture}
+\draw[step=1cm,gray,very thin] (1,1) grid (6,6);
+\filldraw[fill=blue, draw=black] (4,5) rectangle (5,6);
+\filldraw[fill=blue, draw=black] (2,4) rectangle (3,5);
+\filldraw[fill=blue, draw=black] (3,2) rectangle (4,3);
+\filldraw[fill=red, draw=black] (2,2) rectangle (3,3);
+\filldraw[fill=red, draw=black] (3,5) rectangle (4,6);
+\filldraw[fill=red, draw=black] (1,4) rectangle (2,5);
+\end{tikzpicture}
+\end{center}
+
+\section{Zadanie 5}
+\subsection{Opis modelu}
+\subsubsection{Zmienne decyzyjne}
+Dla problemu rozważanego dla \(n\) produktów i \(m\) maszyn zmienną decyzyjną jest \(X\in\mathbb{R}^{n \times m}\), \\
+gdzie \(x_{ij}\) - czas (w minutach) produkcji produktu \(i\) na maszynie \(j\).
+
+\subsubsection{Dane}
+\begin{itemize}
+    \item Przez \(T\in {R}^{n\times m}\) oznaczmy macierz wymaganego czasu pracy, gdzie \(t_{ij}\) - czas pracy dla produktu \(i\) na maszynie \(j\)
+    \item \(c_i\) oznaczamy koszt pracy przez godzinę na maszynie \(i\) (w \$)
+    \item \(C_i\) - koszt materiałów na kilogram produktu \(i\) (w \$)
+    \item \(m_i\) - popyt na produkt \(i\)
+    \item \(p_i\) - cena produktu i (w \$)
+\end{itemize}
+
+\subsubsection{Ograniczenia}
+\begin{itemize}
+    \item \((\forall i\in [n], j\in[m])(x_{ij} \geq 0)\)
+    \item Żadna maszyna nie może pracować więcej niż \(60h = 3600min\)
+    \[(\forall j\in [m])(\sum_{i\in[n]}x_{ij} \leq 3600)\]
+    \item Liczba produktów danego rodzaju nie może przekroczyć popytu
+    \[(\forall i\in [n])(\sum_{j\in[m]}\frac{x_{ij}}{t_{ij}} \leq m_i)\]
+\end{itemize}
+
+\subsubsection{Funkcja celu}
+Funkcją celu jest zysk z produkcji
+\[(\forall i\in [n], j\in[m]) (\sum_{j\in[m]}\frac{x_{ij}}{t_{ij}} (p_i - C_i) - \frac{x_{ij}c_j}{60}) \]
+Będziemy ją maksymalizować.
+
+\subsection{Wyniki i interpretacja}
+Rozważmy egzemplarz z \(n = 4\) produktami, \(m = 3\) maszynami o następującym czasie produkcji produktu dla danej maszyny.
+
+\begin{center}
+\begin{tabular}{| c | c c c |}
+\hline
+ & M1 & M2 & M3\\
+\hline
+p1 & 5 & 10 & 6\\
+p2 & 3 & 6 & 4 \\
+p3 & 4 & 5 & 3 \\
+p4 & 4 & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\[m_1 = 400, m_2 = 100, m_3 = 150, m_4 = 500\]
+\[c_1 =c_2 = 2, c_3 = 3, C_1=4, C_2= C_3=C_4= 1\]
+
+Model zwraca następujący plan produkcji:
+\begin{center}
+\begin{tabular}{| c | c c c |}
+\hline
+ & M1 & M2 & M3\\
+\hline
+p1 & 2000 & 0 & 0\\
+p2 & 300 & 0 & 0 \\
+p3 & 600 & 0 & 0 \\
+p4 & 0 & 0 & 500 \\
+\hline
+\end{tabular}
+\end{center}
+Całkowity zysk wynosi 5228,3.
+
+\end{document}
