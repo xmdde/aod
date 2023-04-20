@@ -1,12 +1,12 @@
 using JuMP, GLPK
 
-# min[p,z] - minimum number of police cars for area p on shift z
-min =
+# mini[p,z] - minimum number of police cars for area p on shift z
+mini = 
 [2 4 3;
  3 6 5;
  5 7 6]
-# max[p,z] - maximum number of police cars for area p on shift z
-max = 
+# maxi[p,z] - maximum number of police cars for area p on shift z
+maxi = 
 [3 7 5;
 5 7 10;
 8 12 10]
@@ -30,11 +30,11 @@ for i in 1:3
 end
 
 for p in 1:3, z in 1:3
-    @constraint(model, min[p,z] <= plan[p,z])
+    @constraint(model, mini[p,z] <= plan[p,z])
 end
 
 for p in 1:3, z in 1:3
-    @constraint(model, plan[p,z] <= max[p,z])
+    @constraint(model, plan[p,z] <= maxi[p,z])
 end
 
 optimize!(model)
