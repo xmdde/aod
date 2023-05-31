@@ -33,3 +33,5 @@ for a in 1:airports, c in 1:companies
         println(c, " -> ", a, ": ", value(plan[a, c]))
     end
 end
+
+println(objective_value(model))

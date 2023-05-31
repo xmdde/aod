@@ -15,7 +15,7 @@ function parsedata()
     end
     start = parse(Int, readline(f)) 
     finish = parse(Int, readline(f)) 
-    T = parse(Int, readline(f)) 
+    T = parse(Int, readline(f))
     return n, a, graph, cost, time, start, finish, T
     end
 end

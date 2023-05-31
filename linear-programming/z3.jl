@@ -24,6 +24,7 @@ model = Model(GLPK.Optimizer)
 for i in 1:3
     @constraint(model, sum(plan[p,i] for p in 1:3) >= shiftsC[i])
 end
+
 # there should be enough cars assigned to each area
 for i in 1:3
     @constraint(model, sum(plan[i,z] for z in 1:3) >= areasC[i])
