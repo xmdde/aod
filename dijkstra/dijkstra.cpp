@@ -9,7 +9,6 @@
 std::vector<int> dijkstra(Graph *g, int src);
 
 int main(int argc, char *argv[]) {
-    
     if (argc < 7) {
         std::cerr << "wrong number of arguments!";
         return -1;
@@ -38,10 +37,11 @@ int main(int argc, char *argv[]) {
     Graph *g = generateGraph(graphFile);
     std::list<int> src = parseSources(srcFile, mode); //tutaj juz sa dobre indeksy 
     std::ofstream file("/Users/justynaziemichod/Documents/SEM4/aod/dijkstra/out/basic/"+resFile, std::ios::out);
-    file << "f " << graphFile << ' ' << srcFile << "\ng " << g->numOfNodes << ' ' << g->numOfVertexes << ' ' << g->minWeight << ' ' << g->maxWeight << "\nt ";
+    file << "f " << graphFile << ' ' << srcFile << "\ng " << g->numOfNodes << ' ' << g->numOfVertexes << ' ' << g->minWeight << ' ' << g->maxWeight << "\n";
     int len = src.size();
 
     if (mode == 1) { //ss 
+        file << "t ";
         long long t = 0;
         while (!src.empty()) {
             auto begin = std::chrono::high_resolution_clock::now();
@@ -56,13 +56,16 @@ int main(int argc, char *argv[]) {
     }
     else {
         std::vector<int> dist;
+        long long d = 0; //sum of distances between pairs from source
         while (!src.empty()) {
             int a = src.front();
             src.pop_front();
             int b = src.front();
             dist = dijkstra(g, a);
             file << "d " << a+1 << ' ' << b+1 << ' ' << dist[b] << '\n';
+            d += dist[b];
         }
+        file << "avg " << (2*d)/len << "\n";
     }
     file.close();
     return 0;
