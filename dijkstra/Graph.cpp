@@ -17,5 +17,4 @@ void Graph::addEdge(int src, int dest, int w) {
 }
 
 Graph::~Graph() {
-    delete adj;
 }

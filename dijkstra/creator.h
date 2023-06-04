@@ -3,6 +3,8 @@
 #include "Graph.h"
 
 Graph* generateGraph(const std::string& path);
+Graph* buildGraph(const std::string& path);
+Graph* generateGraph2(const std::string& path);
 std::list<int> parseSources(const std::string& path, short mode);
 
 #endif //DIJKSTRA_CREATOR_H
