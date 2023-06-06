@@ -29,8 +29,8 @@ void List::remove_front() {
         head = head->next;
         tmp->next = nullptr;
         delete tmp;
+        size--;
     }
-    size--;
 }
 
 List::~List() {
@@ -50,6 +50,31 @@ int List::get_size() {
     return size;
 }
 
+void List::remove_element(int element) {
+    if (!head) {
+        return;
+    }
+    if (!head->next) {
+        remove_front();
+        return;
+    }
+    if (head->key == element) {
+        remove_front();
+        return;
+    }
+    auto tmp = head;
+    Node* prev;
+    while (tmp->next and tmp->key != element) {
+        prev = tmp;
+        tmp = tmp->next;
+    }
+    if (tmp->next) {
+        prev->next = tmp->next;
+        delete tmp;
+        size--;
+    }
+}
+
 CircularArray::CircularArray(int _size) : size(_size) {
     array = std::vector<List>(_size, List());
 }
@@ -65,8 +90,8 @@ int CircularArray::get_element(int key) {
 CircularArray::~CircularArray() {
 }
 
-void CircularArray::delete_element(int key) {
-    array[key%size].remove_front();
+void CircularArray::delete_element(int key, int element) {
+    array[key%size].remove_element(element);
 }
 
 int CircularArray::get_size() {
@@ -83,4 +108,8 @@ int CircularArray::get_ful_size() {
         sum_size += array[i].get_size();
     }
     return sum_size;
+}
+
+int CircularArray::get_bucket_size(int key) {
+    return array[key].get_size();
 }

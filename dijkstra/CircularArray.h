@@ -24,6 +24,7 @@ public:
     void remove_front();
     ~List();
     int get_size();
+    void remove_element(int element);
 };
 
 class CircularArray {
@@ -35,10 +36,11 @@ public:
     CircularArray() = default;
     explicit CircularArray(int _size);
     ~CircularArray();
-    void delete_element(int key);
+    void delete_element(int key, int element);
     int get_size();
     int get_ful_size();
     bool empty(int key);
+    int get_bucket_size(int key);
 };
 
 #endif //DIJKSTRA_CIRCULARARRAY_H

@@ -6,7 +6,7 @@
 
 class Graph {
 public:
-    std::list<std::pair<int, int> > *adj; //adjacency list
+    std::vector<std::vector<std::pair<int, int> >> adj; //adjacency list
     int numOfNodes;
     int maxWeight;
     int minWeight;
