@@ -8,3 +8,9 @@ Linear and integer programming models in GNU MathProg and Julia.
 Variants of Dijkstra's algoritm:
 - basic Dijkstra with priority queue
 - Dial's algorithm
+## max-flow
+Maximum flow
+- Edmonds-Karp algorithm
+- k-dimentional hypercube graph implementation
+## max-matching
+Maximum matching in bipartite graphs.
