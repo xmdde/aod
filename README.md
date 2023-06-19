@@ -13,4 +13,4 @@ Maximum flow
 - Edmonds-Karp algorithm
 - k-dimentional hypercube graph implementation
 ## max-matching
-Maximum matching in bipartite graphs.
+Maximal matching in bipartite graphs.
