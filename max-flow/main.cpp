@@ -14,6 +14,7 @@ void stats(const int k, const int meta) {
         Hypercube tmp = Hypercube(k);
         int p = -1;
         flow += tmp.maxFlow(0, meta, p);
+        //flow += tmp.DinicMaxflow(0, meta, p);
         paths += p;
         auto t = std::chrono::duration_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() - begin);
         time += t.count();
@@ -41,14 +42,15 @@ int main(int argc, char** argv) {
     std::cout << "max flow: " << hypercube.maxFlow(0, meta, numOfPaths) << '\n';
     auto t = std::chrono::duration_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() - begin);
 
+    std::cerr << "t = " << t.count() << " µs\n";
+    std::cerr << "number of paths found: " << numOfPaths << "\n";
+
     if ((argc >= 4 && std::string(argv[3]) == "-printFlow") || (argc == 6 && std::string(argv[5]) == "-printFlow"))
         hypercube.printFlow();
 
-    std::cerr << "t = " << t.count() << " µs\n";
-    std::cerr << "number of paths found: " << numOfPaths;
-
     if ((argc >= 4 && std::string(argv[3]) == "-glpk") || (argc == 6 && std::string(argv[5]) == "-glpk") || (argc >= 5 && std::string(argv[4]) == "-glpk"))
         glpkModel(&hypercube, k);
+
     return 0;
 }
 
