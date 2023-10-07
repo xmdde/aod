@@ -1,5 +1,6 @@
 #ifndef MAX_FLOW_HYPERCUBE_H
 #define MAX_FLOW_HYPERCUBE_H
+
 #include <vector>
 #include <iostream>
 #include "Edge.h"
@@ -10,7 +11,7 @@ private:
     int* level;
 public:
     int k;
-    int v; //num of nodes
+    int v;  // num of nodes
     std::vector<std::vector<Edge*> > adj;
 
     explicit Hypercube(int k) {
@@ -36,4 +37,4 @@ public:
     int sendFlow(int u, int flow, int t, int start[]);
 };
 
-#endif //MAX_FLOW_HYPERCUBE_H
+#endif  // MAX_FLOW_HYPERCUBE_H

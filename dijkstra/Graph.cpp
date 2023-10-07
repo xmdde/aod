@@ -18,6 +18,3 @@ void Graph::addEdge(int src, int dest, int w) {
     else if (w < minWeight)
         minWeight = w;
 }
-
-Graph::~Graph() {
-}

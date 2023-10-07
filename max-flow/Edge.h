@@ -1,25 +1,20 @@
 #ifndef MAX_FLOW_EDGE_H
 #define MAX_FLOW_EDGE_H
+
 #include "utils.h"
 
 class Edge {
 public:
     int k;
-    int s; //source
-    int t; //sink
-    int flow;
+    int s;  // source
+    int t;  // sink
+    int flow = 0;
     int capacity;
     Edge* rev;
-    Edge(int source, int sink, int k) {
-        this->s = source;
-        this->t = sink;
-        this->k = k;
-        setCapacity();
-        this->flow = 0;
-    }
-    ~Edge() {
-    }
+    Edge(int source, int sink, int k);
+    ~Edge() = default;
+private:
     void setCapacity();
 };
 
-#endif //MAX_FLOW_EDGE_H
+#endif  // MAX_FLOW_EDGE_H

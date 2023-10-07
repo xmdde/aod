@@ -1,12 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
-#include <vector>
-#include <limits.h>
-#include <chrono>
 #include "Graph.h"
 #include "creator.h"
-std::vector<int> dijkstra(Graph *g, int src);
+std::vector<int> dijkstra(Graph *g, const int src);
 
 int main(int argc, char *argv[]) {
     if (argc < 7) {
@@ -35,8 +32,8 @@ int main(int argc, char *argv[]) {
     }
 
     Graph *g = generateGraph(graphFile);
-    std::list<int> src = parseSources(srcFile, mode); //tutaj juz sa dobre indeksy 
-    std::ofstream file("/Users/justynaziemichod/Documents/SEM4/aod/dijkstra/out/basic/"+resFile, std::ios::out);
+    std::list<int> src = parseSources(srcFile, mode);
+    std::ofstream file("out/basic/"+resFile, std::ios::out);
     file << "f " << graphFile << ' ' << srcFile << "\ng " << g->numOfNodes << ' ' << g->numOfVertexes << ' ' << g->minWeight << ' ' << g->maxWeight << "\n";
     int len = src.size();
 
@@ -56,22 +53,22 @@ int main(int argc, char *argv[]) {
     }
     else {
         std::vector<int> dist;
-        long long d = 0; //sum of distances between pairs from source
+        long long d = 0;  // sum of distances between pairs from source
         while (!src.empty()) {
             int a = src.front();
             src.pop_front();
             int b = src.front();
             dist = dijkstra(g, a);
-            file << "d " << a+1 << ' ' << b+1 << ' ' << dist[b] << '\n';
+            file << "d " << a + 1 << ' ' << b + 1 << ' ' << dist[b] << '\n';
             d += dist[b];
         }
-        file << "avg " << (2*d)/len << "\n";
+        file << "avg " << (2 * d)/len << "\n";
     }
     file.close();
     return 0;
 }
 
-std::vector<int> dijkstra(Graph *g, int src) {
+std::vector<int> dijkstra(Graph *g, const int src) {
     std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int> >, std::greater<> > priorityQueue;
     std::vector<int> dist(g->numOfNodes, INT_MAX);
     dist[src] = 0;

@@ -1,6 +1,11 @@
+#include "Edge.h"
+
 #include <algorithm>
 #include <random>
-#include "Edge.h"
+
+Edge::Edge(int source, int sink, int k) : s(source), t(sink), k(k) {
+    setCapacity();
+}
 
 void Edge::setCapacity() {
     int sWeight = hammingWeight(s);

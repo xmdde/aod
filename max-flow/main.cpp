@@ -14,7 +14,6 @@ void stats(const int k, const int meta) {
         Hypercube tmp = Hypercube(k);
         int p = -1;
         flow += tmp.maxFlow(0, meta, p);
-        //flow += tmp.DinicMaxflow(0, meta, p);
         paths += p;
         auto t = std::chrono::duration_cast<std::chrono::microseconds>( std::chrono::high_resolution_clock::now() - begin);
         time += t.count();
